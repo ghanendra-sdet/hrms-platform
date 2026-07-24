@@ -3,7 +3,10 @@
 > Full ESS (Employee Self-Service / MyInfo) test suite, covering Login and Personal/Contact
 > Details. Cleaned up and structured from the original test case sheet — one duplicate test case
 > ID in the source data (`TC_MYINFO_LOGIN_03` used twice) has been corrected below
-> (`TC_MYINFO_LOGIN_04`). All data is dummy/sample.
+> (`TC_MYINFO_LOGIN_04`). All data is dummy/sample. See
+> [`docs/business-overview.md`](./docs/business-overview.md) for why the field-access-control
+> model (section 3) is treated as a first-class testing concern, and
+> [`docs/README.md`](./docs/README.md) for the full documentation map.
 
 ## 1. Login
 
@@ -62,7 +65,19 @@ form. Priority: P2 · Category: Progression · Type: GUI · Test Data: N/A
 | TC_MYINFO_PERSDETAILS_05 | Check the user can upload a picture under 1 MB | 1. Login 2. Go to Contact Details form 3. Click Add in the attachment section 4. Browse a dummy image file under 1 MB 5. Click Save | Upload is allowed | Dummy image file, size < 1 MB | — | — | Functional |
 | TC_MYINFO_PERSDETAILS_06 | Check the user cannot upload a picture over 1 MB | 1. Login 2. Go to Contact Details form 3. Click Add in the attachment section 4. Browse a dummy image file over 1 MB 5. Click Save | Upload is **not** allowed — a clear file-size error is shown | Dummy image file, size > 1 MB | P2 | Progression | Functional |
 
-## 6. Full Regression Checklist
+## 6. UI Consistency
+
+> Derived from [`docs/ui-consistency.md`](./docs/ui-consistency.md) — cross-form consistency,
+> not single-field correctness.
+
+| ID | Scenario | Steps | Expected Result |
+|---|---|---|---|
+| TC_MYINFO_UI_01 | Disabled fields visually distinct from enabled fields | 1. View the Personal Details form 2. Compare an HR-controlled field against an employee-editable field | Clearly distinct styling — never visually identical |
+| TC_MYINFO_UI_02 | Save confirmation message consistency | 1. Edit and save different combinations of fields | Identical confirmation message wording regardless of which fields changed |
+| TC_MYINFO_UI_03 | Upload rejection messages are specific, not generic | 1. Trigger a format-rejection 2. Trigger a size-rejection | Each shows a distinct, specific error — never a shared generic "upload failed" |
+| TC_MYINFO_UI_04 | Field states distinguishable without color/opacity alone | 1. View the form with color/opacity rendering simulated as reduced | Disabled fields remain identifiable via `aria-disabled`/cursor state, not styling alone |
+
+## 7. Full Regression Checklist
 
 - [ ] Login — valid credentials
 - [ ] Login — invalid username only
@@ -77,12 +92,13 @@ form. Priority: P2 · Category: Progression · Type: GUI · Test Data: N/A
 - [ ] Profile Picture Upload — accepted formats (jpg/png/gif)
 - [ ] Profile Picture Upload — under size limit (allowed)
 - [ ] Profile Picture Upload — over size limit (rejected)
+- [ ] UI Consistency (field state, messaging, accessibility)
 
-## 7. Priority Automation Candidates
+## 8. Priority Automation Candidates
 
 1. Login — valid credentials (P1 Sanity)
 2. Login — all 3 negative combinations
 3. Personal Details — field enabled/disabled state verification
 4. Personal Details — save/update confirmation
 
-See [`automation/`](../automation) for the Selenium/TestNG implementation.
+See [`automation/`](./automation) for the Selenium/TestNG implementation.

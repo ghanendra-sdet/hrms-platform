@@ -1,5 +1,9 @@
 # HRMS Platform — Automation Framework
 
+> Automated scenarios trace directly to [`../regression-checklist.md`](../regression-checklist.md)
+> sections 1–2 (login + field enabled/disabled state). See
+> [`../docs/README.md`](../docs/README.md) for the full documentation map.
+
 Automation for the ESS Login and Personal Details flows, built with **Selenium WebDriver + Java +
 TestNG**.
 

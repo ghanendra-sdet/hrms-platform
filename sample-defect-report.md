@@ -1,7 +1,9 @@
 # Sample Defect Report — HRMS Platform (ESS)
 
 > Template + worked examples using dummy data. Reflects defect themes found in ESS/MyInfo
-> testing: field-access-control errors and file upload validation gaps.
+> testing: field-access-control errors and file upload validation gaps — see
+> [`docs/business-overview.md`](./docs/business-overview.md) section 3 for why, and
+> [`docs/README.md`](./docs/README.md) for the full documentation map.
 
 ## Defect Theme Taxonomy
 

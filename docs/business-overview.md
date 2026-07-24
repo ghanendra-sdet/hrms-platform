@@ -60,5 +60,31 @@ the form load."
 | **PIM** | Personnel Information Management — the underlying employee data model |
 | **Disabled field** | A form field the current user cannot edit, typically HR/Admin-managed |
 
-See [`test-cases/regression-checklist.md`](../test-cases/regression-checklist.md) for the full
-test suite covering login and every field/control type described above.
+## 6. Stakeholders / Involved Parties
+
+| Stakeholder | Role in this module |
+|---|---|
+| **Employee (ESS user)** | Logs in, views and updates their own permitted personal/contact details |
+| **HR Admin** | Creates ESS user accounts, manages HR-controlled fields employees cannot self-edit |
+| **Payroll Team** | Consumes system-of-record fields (DOB, Employee ID) for payroll and compliance processing — the reason those fields must stay HR-controlled |
+| **IT/Platform Admin** | Manages ESS access provisioning and system configuration |
+| **QA Team** | Maintains field-by-field GUI validation coverage as the core quality bar for this form |
+
+## 7. Dependencies
+
+### Internal Platform Dependencies
+
+- **PIM (Personnel Information Management)** — the underlying employee data store ESS reads from
+  and writes to; the field-access-control model (section 3) is ultimately enforced against this
+  system of record
+- **Authentication Service** — ESS login credential validation
+- **File Storage Service** — profile picture uploads, with format/size validation (section 4)
+
+**Testing implication:** because HR-controlled fields (Employee ID, Date of Birth, Driver's
+License Number) feed directly into payroll and compliance processing, an access-control defect
+here (see [`sample-defect-report.md`](../sample-defect-report.md) Defect #1) isn't just a UI bug —
+it's a data-integrity risk with downstream payroll/compliance impact, which is why field-access
+enforcement is tested at both the form-rendering and save/API layers rather than the UI alone.
+
+See [`regression-checklist.md`](../regression-checklist.md) for the full test suite covering
+login and every field/control type described above.

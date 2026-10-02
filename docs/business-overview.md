@@ -10,11 +10,19 @@ nickname, marital status, contact preferences) without needing HR to make every 
 while other, more sensitive or system-of-record fields (Employee ID, Date of Birth) stay
 HR-controlled. The ESS/MyInfo module is that self-service layer.
 
-## 2. Core Modules
+## 2. Core Modules and Their Submodules
 
-- **Login / Authentication** — ESS user credential validation
-- **Personal / Contact Details (MyInfo)** — the employee's own editable and view-only profile
-  fields, including a profile picture upload
+| Module | Submodules / Key Components | Responsible For | Primarily Tested Via |
+|---|---|---|---|
+| **Login / Authentication** | Credential Validation · Negative-Case Error Messaging | ESS user credential validation — see [`architecture-and-flow.md`](./architecture-and-flow.md) for how a session leads into the rest of the flow | UI Automation + Functional Testing |
+| **Personal / Contact Details (MyInfo)** | Field Rendering (per-role editable/disabled state) · Save/Persistence · Field-Level Write Authorization | The employee's own editable and view-only profile fields — split into *rendering* and *write authorization* deliberately, since section 4 below shows they're different checks that can fail independently | GUI Testing + API Testing |
+| **File Upload (Profile Picture)** | Format Validation · Size Validation | Accepting a profile picture only within accepted formats and size limit — see [`architecture-and-flow.md`](./architecture-and-flow.md) section 4 for why format and size need to be validated as two genuinely separate checks | Functional Testing |
+
+**Why "Field-Level Write Authorization" is called out as its own submodule, not folded into
+"Save/Persistence":** per [`sample-defect-report.md`](../sample-defect-report.md) Defect #1, a
+save endpoint can correctly persist data (the save genuinely works) while still authorizing the
+*wrong set of fields* to be written — those are two different correctness properties, and
+treating them as one blurs exactly the distinction that defect depended on.
 
 ## 3. The Field-Access-Control Model
 
@@ -59,6 +67,8 @@ the form load."
 | **MyInfo** | Common name for the ESS personal-details module |
 | **PIM** | Personnel Information Management — the underlying employee data model |
 | **Disabled field** | A form field the current user cannot edit, typically HR/Admin-managed |
+| **BOPLA (Broken Object Property Level Authorization)** | OWASP API3:2023's name for an API that authorizes access to an *object* but not to specific *properties* on it — consolidates what used to be called "Mass Assignment." This is the exact vulnerability class behind [`sample-defect-report.md`](../sample-defect-report.md) Defect #1 |
+| **PF / ESI / TDS** | Provident Fund / Employee State Insurance / Tax Deducted at Source — the statutory payroll-compliance calculations that consume HR-controlled system-of-record fields (DOB, Employee ID) from PIM, which is why those fields can't be employee-editable |
 
 ## 6. Stakeholders / Involved Parties
 

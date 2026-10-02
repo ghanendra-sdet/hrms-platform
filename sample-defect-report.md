@@ -38,6 +38,9 @@ system-of-record field (per TC_MYINFO_PERSDETAILS_01).
 
 **Actual Result**
 The field is editable, and a change to it is saved successfully without any HR approval step.
+See [`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md) section 3 for this exact
+mechanism shown as a flowchart (it maps to OWASP API3:2023 Broken Object Property Level
+Authorization).
 
 **Impact**
 An employee could alter their own official date of birth, which has downstream implications for
@@ -71,7 +74,8 @@ The upload should be rejected with a clear file-size error.
 
 **Actual Result**
 The file uploads successfully — the size check only validates the file extension, not the actual
-file size.
+file size. See [`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md) section 4 for
+this exact mechanism shown as a flowchart.
 
 **Impact**
 Unchecked large file uploads can degrade page load performance across the ESS module and

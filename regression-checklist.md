@@ -19,6 +19,10 @@
 
 ## 2. Personal Details — GUI Element State (Enabled / Disabled)
 
+> See [`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md) section 3 for why
+> rendering a field as disabled is a UI-layer check only — [`sample-rtm.md`](./sample-rtm.md)
+> REQ-408 covers the independent API-layer check this section alone doesn't test.
+
 **TC_MYINFO_PERSDETAILS_01** — Check the GUI elements present in the Contact Details form.
 Priority: P3 · Category: Progression · Type: GUI · Test Data: N/A
 

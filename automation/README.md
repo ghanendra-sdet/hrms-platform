@@ -2,7 +2,11 @@
 
 > Automated scenarios trace directly to [`../regression-checklist.md`](../regression-checklist.md)
 > sections 1–2 (login + field enabled/disabled state). See
-> [`../docs/README.md`](../docs/README.md) for the full documentation map.
+> [`../docs/README.md`](../docs/README.md) for the full documentation map,
+> [`../docs/architecture-and-flow.md`](../docs/architecture-and-flow.md) for the sequence diagrams
+> each scenario below is built to validate, and
+> [`../docs/tech-and-skills.md`](../docs/tech-and-skills.md) section 5 for the full performance
+> testing approach for this domain.
 
 Automation for the ESS Login and Personal Details flows, built with **Selenium WebDriver + Java +
 TestNG**.
@@ -30,7 +34,9 @@ automation/
 │   │   └── DummyEssCredentials.java
 │   └── tests/
 │       └── SampleEssLoginTest.java
-└── testng.xml
+├── testng.xml
+└── jmeter/
+    └── login-access-storm-load.jmx   ← concurrent login/access-storm load testing
 ```
 
 > This repo currently includes one representative sample (`SampleEssLoginTest.java`) rather than
@@ -47,3 +53,5 @@ employee account.
 2. Login — all 3 negative combinations (invalid username / invalid password / both invalid)
 3. Personal Details — field enabled/disabled state verification
 4. Personal Details — save/update confirmation
+5. Concurrent login/access-storm load testing (JMeter — see
+   [`../docs/tech-and-skills.md`](../docs/tech-and-skills.md) section 5)

@@ -22,14 +22,19 @@
 2. [My Role](#-my-role)
 3. [Tech Stack & Tools Used](#-tech-stack--tools-used)
 4. [Types of Testing Performed](#-types-of-testing-performed)
-5. [Key Achievements](#-key-achievements)
-6. [Automation Approach](#-automation-approach)
-7. [Regression Checklist](#-regression-checklist)
-8. [Screenshots & Reports](#-screenshots--reports)
-9. [Repository Structure](#-repository-structure)
+5. [How It Works — ESS Save Flow](#-how-it-works--ess-save-flow)
+6. [Key Achievements](#-key-achievements)
+7. [Automation Approach](#-automation-approach)
+8. [Regression Checklist](#-regression-checklist)
+9. [Screenshots & Reports](#-screenshots--reports)
+10. [Repository Structure](#-repository-structure)
 
-> Deeper dives not covered inline in this README: [Stakeholders & Dependencies](./docs/business-overview.md),
-> [UI Consistency](./docs/ui-consistency.md) — see [`docs/README.md`](./docs/README.md) for the full map.
+> Deeper dives not covered inline in this README: [Modules, Submodules & Stakeholders](./docs/business-overview.md),
+> [Architecture, Flow & Real Sequence Diagrams](./docs/architecture-and-flow.md),
+> [Full Tech Stack & Skills Demonstrated](./docs/tech-and-skills.md), [UI Consistency](./docs/ui-consistency.md)
+> — see [`docs/README.md`](./docs/README.md) for the full map. **Every diagram in this repo is
+> drawn in Mermaid and renders natively right here on GitHub — nothing requires visiting another
+> site.**
 
 ---
 
@@ -88,11 +93,15 @@ module, with API-level validation support.
 | Category | Tools |
 |---|---|
 | **Manual Testing** | Functional, GUI, Database/Data-validation testing |
-| **API Testing** | Postman, SQL (direct database validation) |
+| **API Testing & Automation** | Postman, SQL (direct database validation) |
 | **UI Automation** | Selenium WebDriver, Java, TestNG |
 | **Build Tool** | Maven |
-| **Bug Tracking** | JIRA |
+| **Performance Testing** | JMeter (concurrent login/access-storm load testing) |
+| **Bug Tracking & Traceability** | JIRA, RTM (Requirement Traceability Matrix — see [`sample-rtm.md`](./sample-rtm.md)) |
 | **Version Control** | Git, GitHub |
+
+> Full detail on *why* each tool was chosen, a skill → proof map, and the performance testing
+> approach in depth: [`docs/tech-and-skills.md`](./docs/tech-and-skills.md).
 
 ---
 
@@ -104,7 +113,33 @@ module, with API-level validation support.
 - **Database/Data-Level Testing** — validating that saved changes are correctly persisted
 - **File Upload Validation** — format and size constraint testing
 - **API Testing** — via Postman with SQL-backed validation
+- **Security-Adjacent Field-Authorization Testing** — confirming HR-controlled fields are
+  rejected by the save API directly, independent of the UI (see
+  [`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md) section 3 — this maps to
+  OWASP's Broken Object Property Level Authorization classification)
+- **Performance Testing** — concurrent login/access-storm load testing with JMeter (see
+  [`docs/tech-and-skills.md`](./docs/tech-and-skills.md) section 5)
 - **Regression Testing** / **Smoke & Sanity Testing**
+
+---
+
+## 🔄 How It Works — ESS Save Flow
+
+```mermaid
+flowchart TD
+    A["Employee logs in"] --> B["Personal Details form loads<br/>with per-field enabled/disabled state"]
+    B --> C["Employee edits an employee-editable field"]
+    C --> D["Save submitted to the API"]
+    D --> E{"API independently validates:<br/>is this field writable by this role?"}
+    E -->|Yes| F["Field updated in PIM, confirmation shown"]
+    E -->|"No — field is HR-controlled"| G["Write rejected — regardless of what the UI sent"]
+```
+
+**Key testing principle:** the enabled/disabled state rendered in the UI is a usability signal,
+not a security boundary — the save API has to make its own independent decision about which
+fields a given role may write, every single time, regardless of what the client submits. See
+[`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md) for the full set of sequence
+diagrams, including exactly how skipping that independent check produced a real defect.
 
 ---
 
@@ -125,7 +160,8 @@ module, with API-level validation support.
 
 Automation is built with **Selenium WebDriver + Java + TestNG**, targeting the highest-priority
 ESS flows (login and personal details save) as a complement to the broader manual regression
-suite.
+suite, backed by JMeter for concurrent login/access-storm performance testing (see
+[`docs/tech-and-skills.md`](./docs/tech-and-skills.md) section 5).
 
 ### Priority Automated Scenarios
 
@@ -133,6 +169,7 @@ suite.
 2. Login — invalid credentials (negative cases)
 3. Personal Details — field enabled/disabled state verification
 4. Personal Details — save/update confirmation
+5. Concurrent login/access-storm load testing (JMeter)
 
 See [`automation/`](./automation) for the framework README and a sample spec file using dummy
 data.
@@ -157,9 +194,9 @@ Full checklist with edge cases available in [`regression-checklist.md`](./regres
 
 ## 📸 Screenshots & Reports
 
-Sample test execution reports and defect report templates are available in
-[`regression-execution-summary.md`](./regression-execution-summary.md) and
-[`sample-defect-report.md`](./sample-defect-report.md).
+Sample test execution reports, defect report templates, and a worked Requirement Traceability
+Matrix are available in [`regression-execution-summary.md`](./regression-execution-summary.md),
+[`sample-defect-report.md`](./sample-defect-report.md), and [`sample-rtm.md`](./sample-rtm.md).
 
 ---
 
@@ -174,10 +211,14 @@ hrms-platform/
 ├── README.md
 ├── regression-checklist.md          → Full ESS Login + Personal Details test suite
 ├── sample-defect-report.md          → Defect theme taxonomy + worked defect examples
+├── sample-rtm.md                    → Worked Requirement Traceability Matrix, including real coverage gaps
 ├── regression-execution-summary.md  → Sample regression test execution report
 ├── docs/
 │   ├── README.md                    → 📍 Documentation map — start here
-│   ├── business-overview.md         → What HRMS/ESS is, field-access-control model, stakeholders, dependencies
+│   ├── business-overview.md         → What HRMS/ESS is, modules/submodules, field-access-control model
+│   ├── architecture-and-flow.md     → Real Mermaid sequence/flow diagrams: save flow, the BOPLA mechanism
+│   │                                    behind Defect #1, file-upload validation
+│   ├── tech-and-skills.md           → Full tech stack (with why), skill → proof map, CI/CD shape, performance depth
 │   └── ui-consistency.md            → Cross-form UI/UX consistency (field state, messaging, a11y)
 └── automation/
     ├── README.md                    → Framework setup & structure

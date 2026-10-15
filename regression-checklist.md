@@ -71,8 +71,8 @@ form. Priority: P2 · Category: Progression · Type: GUI · Test Data: N/A
 
 ## 6. UI Consistency
 
-> Derived from [`docs/ui-consistency.md`](./docs/ui-consistency.md) — cross-form consistency,
-> not single-field correctness.
+> Derived from [`docs/ui-consistency.md`](./docs/ui-consistency.md) — cross-form consistency, not
+> single-field correctness.
 
 | ID | Scenario | Steps | Expected Result |
 |---|---|---|---|

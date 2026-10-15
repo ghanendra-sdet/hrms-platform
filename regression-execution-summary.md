@@ -31,10 +31,10 @@
 
 ## Conclusion
 
-The regression cycle's two findings — a field-access-control bypass on Date of Birth and a
-file-size validation gap on profile picture upload — are exactly the defect classes this
-module's QA strategy is built to catch through field-by-field GUI validation rather than
-happy-path-only testing. Both were prioritized for fix-and-retest ahead of UAT sign-off.
+This cycle's two findings — a field-access-control bypass on Date of Birth and a file-size
+validation gap on profile picture upload — are exactly the defect classes this module's QA
+strategy is built to catch through field-by-field GUI validation rather than happy-path-only
+testing. Both were prioritized for fix-and-retest ahead of UAT sign-off.
 
 **See also:** [`docs/business-overview.md`](./docs/business-overview.md) section 3 for the
 field-access-control model behind this test structure, and

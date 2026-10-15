@@ -1,7 +1,7 @@
 # Sample Defect Report — HRMS Platform (ESS)
 
-> Template + worked examples using dummy data. Reflects defect themes found in ESS/MyInfo
-> testing: field-access-control errors and file upload validation gaps — see
+> Template + worked examples using dummy data. Reflects defect themes found in ESS/MyInfo testing:
+> field-access-control errors and file upload validation gaps — see
 > [`docs/business-overview.md`](./docs/business-overview.md) section 3 for why, and
 > [`docs/README.md`](./docs/README.md) for the full documentation map.
 
@@ -33,14 +33,14 @@
 3. Attempt to edit the Date of Birth field
 
 **Expected Result**
-Date of Birth should be **disabled** for the ESS employee — it's an HR-controlled,
-system-of-record field (per TC_MYINFO_PERSDETAILS_01).
+Date of Birth should be **disabled** for the ESS employee — it's an HR-controlled, system-of-
+record field (per TC_MYINFO_PERSDETAILS_01).
 
 **Actual Result**
-The field is editable, and a change to it is saved successfully without any HR approval step.
-See [`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md) section 3 for this exact
-mechanism shown as a flowchart (it maps to OWASP API3:2023 Broken Object Property Level
-Authorization).
+The field is editable, and a change to it saves successfully without any HR approval step. See
+[`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md) section 3 for this exact
+mechanism shown as a flowchart — it maps to OWASP API3:2023 Broken Object Property Level
+Authorization.
 
 **Impact**
 An employee could alter their own official date of birth, which has downstream implications for
@@ -48,8 +48,8 @@ payroll, compliance, and any age-dependent policy logic — a data-integrity iss
 cosmetic one.
 
 **Suggested Fix**
-Enforce the field-access-control list at the form-rendering layer (and ideally also at the
-save/API layer as defense-in-depth), consistent with the enabled/disabled matrix documented in
+Enforce the field-access-control list at the form-rendering layer, and ideally also at the
+save/API layer as defense-in-depth, consistent with the enabled/disabled matrix documented in
 `docs/business-overview.md`.
 
 ---
@@ -78,12 +78,12 @@ file size. See [`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md
 this exact mechanism shown as a flowchart.
 
 **Impact**
-Unchecked large file uploads can degrade page load performance across the ESS module and
-increase storage costs at scale, especially across a large employee base.
+Unchecked large file uploads can degrade page load performance across the ESS module and increase
+storage costs at scale, especially across a large employee base.
 
 **Suggested Fix**
-Add an explicit file-size check (both client-side for fast feedback and server-side as the
-authoritative check) before accepting the upload.
+Add an explicit file-size check — client-side for fast feedback, server-side as the authoritative
+check — before accepting the upload.
 
 ---
 

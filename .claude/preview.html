@@ -1,0 +1,845 @@
+<title>HRMS Platform Docs</title>
+<style>
+/* layout concept: sidebar documentation map (mirrors this repo's own docs/README.md
+   "reading order") + a single reading pane, so the preview behaves like the repo's
+   own navigation idea rather than a generic tab bar */
+:root {
+  --bg: #f6f4ef;
+  --bg-raised: #ffffff;
+  --fg: #211f1a;
+  --fg-dim: #6b665c;
+  --border: #e2ddd0;
+  --accent: #b5691a;
+  --accent-fg: #fff8ef;
+  --good: #1b5e20;
+  --good-bg: #e8f3e9;
+  --bad: #b71c1c;
+  --bad-bg: #fbeaea;
+  --gate: #4a148c;
+  --gate-bg: #f1e7f8;
+  --code-bg: #efe9da;
+  --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  --sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #171510;
+    --bg-raised: #1f1c16;
+    --fg: #f1ede3;
+    --fg-dim: #a39c8c;
+    --border: #35312a;
+    --accent: #e8a355;
+    --accent-fg: #171510;
+    --good: #7bc47f;
+    --good-bg: #1c2e1d;
+    --bad: #e8827c;
+    --bad-bg: #2e1c1c;
+    --gate: #c79be8;
+    --gate-bg: #271c30;
+    --code-bg: #26221a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #171510;
+  --bg-raised: #1f1c16;
+  --fg: #f1ede3;
+  --fg-dim: #a39c8c;
+  --border: #35312a;
+  --accent: #e8a355;
+  --accent-fg: #171510;
+  --good: #7bc47f;
+  --good-bg: #1c2e1d;
+  --bad: #e8827c;
+  --bad-bg: #2e1c1c;
+  --gate: #c79be8;
+  --gate-bg: #271c30;
+  --code-bg: #26221a;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  margin: 0;
+  padding-inline: 0;
+}
+.app {
+  display: flex;
+  min-height: 100dvh;
+}
+.sidebar {
+  width: 248px;
+  flex: none;
+  border-right: 1px solid var(--border);
+  background: var(--bg-raised);
+  padding: 20px 14px calc(20px + env(safe-area-inset-bottom, 0px));
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  align-self: flex-start;
+  height: 100dvh;
+  overflow-y: auto;
+}
+.brand {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  padding: 0 10px 14px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 14px;
+}
+.brand strong {
+  display: block;
+  font-family: var(--sans);
+  font-size: 16px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--fg);
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.map-label {
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  padding: 4px 10px 8px;
+}
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 10px;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  color: var(--fg-dim);
+  cursor: pointer;
+  margin-bottom: 2px;
+}
+.nav-item:hover { background: var(--code-bg); color: var(--fg); }
+.nav-item.active { background: var(--accent); color: var(--accent-fg); }
+.nav-item .sub { font-size: 11px; opacity: 0.8; font-weight: 400; }
+.nav-item strong { font-weight: 600; }
+
+.content {
+  flex: 1;
+  min-width: 0;
+  padding: 36px clamp(20px, 5vw, 64px) 64px;
+}
+.doc {
+  max-width: 760px;
+  margin: 0 auto;
+}
+.doc h1 {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: clamp(26px, 4vw, 34px);
+  text-wrap: balance;
+  margin: 0 0 6px;
+}
+.doc h2 {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 21px;
+  margin: 40px 0 14px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  text-wrap: balance;
+}
+.doc h3 {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 16px;
+  margin: 26px 0 10px;
+}
+.doc p, .doc li { line-height: 1.65; font-size: 14.5px; max-width: 65ch; }
+.doc > p:first-of-type { color: var(--fg-dim); font-size: 16px; }
+.doc ul, .doc ol { padding-left: 22px; }
+.doc li { margin-bottom: 6px; }
+.doc a { color: var(--accent); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent); text-underline-offset: 2px; }
+.doc code {
+  font-family: var(--mono);
+  background: var(--code-bg);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.88em;
+}
+.doc pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  overflow-x: auto;
+}
+.doc pre code { background: none; padding: 0; }
+.doc blockquote {
+  margin: 16px 0;
+  padding: 10px 16px;
+  border-left: 3px solid var(--accent);
+  background: var(--code-bg);
+  border-radius: 0 8px 8px 0;
+  color: var(--fg-dim);
+  font-size: 13.5px;
+}
+.doc blockquote p { margin: 4px 0; max-width: none; }
+.doc table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 16px 0;
+  display: block;
+  overflow-x: auto;
+}
+.doc th, .doc td {
+  border: 1px solid var(--border);
+  padding: 7px 10px;
+  text-align: left;
+  vertical-align: top;
+}
+.doc th {
+  background: var(--code-bg);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.doc hr { border: none; border-top: 1px solid var(--border); margin: 30px 0; }
+.doc pre.mermaid {
+  background: var(--bg-raised);
+  display: flex;
+  justify-content: center;
+  padding: 20px 10px;
+}
+.banner {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--fg-dim);
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 28px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.banner .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex: none; }
+
+@media (max-width: 760px) {
+  .app { flex-direction: column; }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 14px;
+  }
+  .map-label { display: none; }
+  .sidebar-list { display: flex; gap: 6px; overflow-x: auto; }
+  .nav-item { width: auto; white-space: nowrap; flex: none; }
+  .nav-item .sub { display: none; }
+  .content { padding: 24px 16px 48px; }
+}
+</style>
+
+<div class="app">
+  <nav class="sidebar">
+    <div class="brand"><strong>HRMS Platform</strong>docs preview</div>
+    <div class="map-label">Documentation Map</div>
+    <div class="sidebar-list">
+      <button class="nav-item active" data-doc="readme"><strong>README</strong><span class="sub">Start here — overview, flow, achievements</span></button>
+      <button class="nav-item" data-doc="architecture"><strong>Architecture &amp; Flow</strong><span class="sub">4 diagrams — save flow, BOPLA mechanism</span></button>
+      <button class="nav-item" data-doc="business"><strong>Business Overview</strong><span class="sub">Modules, field-access model, glossary</span></button>
+      <button class="nav-item" data-doc="tech"><strong>Tech &amp; Skills</strong><span class="sub">2 diagrams — stack, pyramid, CI/CD</span></button>
+      <button class="nav-item" data-doc="ui"><strong>UI Consistency</strong><span class="sub">Field-state and messaging rules</span></button>
+    </div>
+  </nav>
+  <main class="content">
+    <div class="banner"><span class="dot"></span>Live preview of this session's uncommitted changes — rendered locally, not fetched from GitHub</div>
+    <div class="doc" id="doc"></div>
+  </main>
+</div>
+
+<script type="text/markdown" id="src-readme">
+# 👥 HRMS Platform
+
+**A Human Resource Management System with Employee Self-Service (ESS) — QA & Automation Portfolio Project**
+
+> This repository documents the QA strategy, manual and automated test coverage, and testing
+> approach behind an **HRMS platform**, focused on the **Employee Self-Service (ESS / MyInfo)**
+> module — the portal employees use to log in and manage their own personal details.
+>
+> All content here uses **generic/sample data only**. No client names, company names, or
+> confidential/production information appear anywhere. Dates and timelines are placeholders —
+> update `[Timeline]` before publishing.
+>
+> 📍 **New here?** `docs/README.md` is a documentation map — it answers what this is, how it
+> works, who's involved, and what it depends on, with a suggested reading order through the rest
+> of the repo.
+
+---
+
+## 💡 What is an HRMS / ESS Module?
+
+A Human Resource Management System streamlines core HR operations — payroll compliance,
+attendance, leave, recruitment, performance management, onboarding, biometric integration — under
+one platform with role-based access control.
+
+The Employee Self-Service module, sometimes called "MyInfo," is the employee-facing slice of that
+system: where an individual employee logs in and manages their own personal and contact details,
+separate from what HR/Admin manages on their behalf. Because ESS is employee-facing and touches
+personally identifiable information, it carries a distinct QA emphasis compared to admin-side HRMS
+modules:
+
+- **Strict field-level access control** — some fields (Employee ID, Date of Birth, Driver's
+  License Number) are typically HR-managed and shown as read-only to the employee, while others
+  (Nickname, Marital Status) are employee-editable
+- **GUI element behavior correctness** — text boxes, combo boxes, radio buttons, and date pickers
+  each need to behave exactly as their control type implies, since every employee in the company
+  fills out this same form
+- **File upload validation** — profile picture uploads need both format and size validation
+
+### Who typically interacts with it?
+
+| Role | What they do |
+|---|---|
+| **Employee (ESS user)** | Logs in, views and updates their own permitted personal/contact details |
+| **HR Admin** | Creates ESS user accounts, manages the fields employees cannot self-edit |
+
+---
+
+## 👤 My Role
+
+QA Engineer responsible for manual functional, GUI, and data-validation testing of the HRMS ESS
+module, with API-level validation support.
+
+- Designed and executed manual test cases covering functional, regression, smoke, and sanity
+  testing for HRMS modules, reaching a 90%+ test case pass rate before UAT
+- Conducted manual API testing using Postman and SQL database validation, catching 30%+ of
+  critical defects pre-release
+- Validated field-level GUI behavior — enabled/disabled state, text input, combo box
+  single-select behavior, radio button exclusivity, and date-picker correctness — for every field
+  on the ESS Personal/Contact Details form
+- Validated file upload constraints (accepted formats, size limits) for profile picture uploads
+- Raised and managed defects in JIRA, keeping critical defects out of production across payroll
+  and compliance-adjacent modules
+
+**Timeline:** `[Add Duration]`
+
+---
+
+## 🛠 Tech Stack & Tools Used
+
+| Category | Tools |
+|---|---|
+| **Manual Testing** | Functional, GUI, Database/Data-validation testing |
+| **API Testing & Automation** | Postman, SQL (direct database validation) |
+| **UI Automation** | Selenium WebDriver, Java, TestNG |
+| **Build Tool** | Maven |
+| **Performance Testing** | JMeter (concurrent login/access-storm load testing) |
+| **Bug Tracking & Traceability** | JIRA, RTM (Requirement Traceability Matrix) |
+| **Version Control** | Git, GitHub |
+
+---
+
+## 🧪 Types of Testing Performed
+
+- **Functional Testing** — login, personal/contact details save and update flows
+- **GUI Testing** — field enabled/disabled state, control-type behavior (text box, combo box,
+  radio button, date picker)
+- **Database/Data-Level Testing** — validating saved changes are correctly persisted
+- **File Upload Validation** — format and size constraint testing
+- **API Testing** — via Postman with SQL-backed validation
+- **Security-Adjacent Field-Authorization Testing** — confirming HR-controlled fields are
+  rejected by the save API directly, independent of the UI (maps to OWASP's Broken Object
+  Property Level Authorization classification)
+- **Performance Testing** — concurrent login/access-storm load testing with JMeter
+- **Regression Testing** / **Smoke & Sanity Testing**
+
+---
+
+## 🔄 How It Works — ESS Save Flow
+
+```mermaid
+flowchart TD
+    A["🔐 Employee logs in"] --> B["📋 Personal Details form loads<br/>with per-field enabled/disabled state"]
+    B --> C["✏️ Employee edits an employee-editable field"]
+    C --> D["📤 Save submitted to the API"]
+    D --> E{"🛡️ API independently validates:<br/>is this field writable by this role?"}
+    E -->|Yes| F["✅ Field updated in PIM, confirmation shown"]
+    E -->|"No — field is HR-controlled"| G["🚫 Write rejected — regardless of what the UI sent"]
+
+    classDef gate fill:#4a148c,stroke:#8e24aa,color:#fff
+    classDef good fill:#1b5e20,stroke:#43a047,color:#fff
+    classDef bad fill:#b71c1c,stroke:#e53935,color:#fff
+    class E gate
+    class F good
+    class G bad
+```
+
+The enabled/disabled state rendered in the UI is a usability signal, not a security boundary — the
+save API has to make its own independent decision about which fields a given role may write, every
+single time, regardless of what the client submits.
+
+---
+
+## 🏆 Key Achievements
+
+- Reached a 90%+ test case pass rate before UAT across HRMS modules
+- Caught 30%+ of critical defects pre-release through manual API testing combined with direct SQL
+  database validation
+- Kept critical defects out of production across payroll and compliance-adjacent modules
+- Built a detailed, field-by-field GUI validation suite for the ESS Personal/Contact Details form,
+  covering every control type (text, combo, radio, date, file upload) rather than spot-checking a
+  subset
+
+---
+
+## 🤖 Automation Approach
+
+Automation is built with **Selenium WebDriver + Java + TestNG**, targeting the highest-priority
+ESS flows (login and personal details save) as a complement to the broader manual regression
+suite, backed by JMeter for concurrent login/access-storm performance testing.
+
+### Priority Automated Scenarios
+
+1. Login — valid credentials
+2. Login — invalid credentials (negative cases)
+3. Personal Details — field enabled/disabled state verification
+4. Personal Details — save/update confirmation
+5. Concurrent login/access-storm load testing (JMeter)
+
+See `automation/` for the framework README and a sample test with its page objects, built on
+dummy data.
+
+---
+
+## ✅ Regression Checklist
+
+- [ ] Login — valid credentials
+- [ ] Login — invalid username / invalid password / both invalid
+- [ ] Personal Details — GUI element enabled/disabled state
+- [ ] Personal Details — GUI element behavior (text box / combo box / radio button / date picker)
+- [ ] Personal Details — save/update persistence
+- [ ] Profile Picture Upload — valid format (jpg/png/gif)
+- [ ] Profile Picture Upload — size under limit
+- [ ] Profile Picture Upload — size over limit (rejection)
+- [ ] UI Consistency (field state, messaging, accessibility)
+
+---
+
+## 📁 Repository Structure
+
+```
+hrms-platform/
+├── README.md
+├── regression-checklist.md
+├── sample-defect-report.md
+├── sample-rtm.md
+├── regression-execution-summary.md
+├── docs/
+│   ├── README.md
+│   ├── business-overview.md
+│   ├── architecture-and-flow.md
+│   ├── tech-and-skills.md
+│   └── ui-consistency.md
+└── automation/
+    ├── README.md
+    ├── SampleEssLoginTest.java      → Sample Selenium + TestNG test (dummy data)
+    ├── LoginPage.java               → Page object the sample test drives
+    └── PersonalDetailsPage.java     → Page object the sample test drives
+```
+</script>
+
+<script type="text/markdown" id="src-architecture">
+# HRMS Platform — Architecture & Flow
+
+> Every diagram below is drawn in Mermaid, which GitHub renders natively in-page — nothing here
+> requires opening another site or tool to read it.
+
+## 1. System Architecture — Who Talks to Whom
+
+```mermaid
+flowchart TD
+    Employee([👤 Employee]) --> ESS["🖥️ ESS / MyInfo Portal"]
+    HRAdmin([🧑‍💼 HR Admin]) --> AC["⚙️ Admin Console"]
+
+    ESS --> GW["🚪 API Gateway"]
+    AC --> GW
+
+    GW --> Auth["🔑 Authentication Service"]
+    GW --> PIM["📇 PIM — Personnel Information Management<br/>(system of record)"]
+    GW --> FS["🗂️ File Storage Service<br/>(profile picture uploads)"]
+
+    PIM --> Payroll["💰 Payroll Processing<br/>consumes DOB, Employee ID"]
+    PIM --> Compliance["📜 Compliance Reporting<br/>PF / ESI / TDS"]
+    AC --> PIM
+
+    classDef person fill:#1a237e,stroke:#5c6bc0,color:#fff
+    classDef service fill:#004d40,stroke:#26a69a,color:#fff
+    classDef authority fill:#4a148c,stroke:#ab47bc,color:#fff
+    class Employee,HRAdmin person
+    class ESS,AC,GW,Auth,FS service
+    class PIM,Payroll,Compliance authority
+```
+
+Payroll and Compliance are drawn as downstream consumers of PIM, not of the ESS form itself,
+because the fields ESS marks HR-controlled — Date of Birth, Employee ID, Driver's License Number —
+aren't arbitrarily locked. Payroll and statutory compliance reporting (PF, ESI, TDS) read them
+directly from PIM as system-of-record values. An access-control bug in ESS doesn't just corrupt
+one employee's profile view — it can corrupt what payroll and compliance systems compute from, if
+the write actually reaches PIM.
+
+## 2. Editing & Saving Personal Details
+
+```mermaid
+sequenceDiagram
+    actor Employee
+    participant UI as ESS Portal
+    participant API as Personal Details API
+    participant PIM
+
+    Employee->>UI: Opens Personal Details form
+    UI->>API: GET /personal-details
+    API->>PIM: Fetch employee record
+    PIM-->>API: Full record
+    API-->>UI: Record + per-field editable flags
+    UI-->>Employee: Renders form — HR-controlled fields shown disabled
+    Employee->>UI: Edits Nick Name, clicks Save
+    UI->>API: PATCH /personal-details { nickName: "Ravi" }
+    API->>API: Validate — is "nickName" in THIS role's allowed-write-field list?
+    API->>PIM: Update only the validated field(s)
+    PIM-->>API: Saved
+    API-->>UI: 200 + confirmation
+    UI-->>Employee: "Details are saved"
+```
+
+The line that matters most in this diagram is `API->>API: Validate — is "nickName" in THIS role's
+allowed-write-field list?` That check has to run regardless of what the UI sent, and specifically
+per field, not just "is this employee allowed to call this endpoint at all." Section 3 shows what
+happens when that line gets skipped.
+
+## 3. Field-Level Access Control as Defense in Depth — the Real Mechanism Behind Defect #1
+
+Defect #1 (Date of Birth editable by the employee) maps directly onto a named, well-documented API
+vulnerability class — OWASP API3:2023, Broken Object Property Level Authorization (BOPLA), which
+consolidates what used to be called "Mass Assignment": an API that checks whether a user can
+access an *object* (this employee's own record) but never checks whether they can write a specific
+*property* on it.
+
+```mermaid
+flowchart TD
+    Submit["📤 Employee submits PATCH /personal-details<br/>{ dateOfBirth: '1990-01-01', nickName: 'Ravi' }"] --> UILayer{"UI Layer:<br/>was Date of Birth rendered disabled?"}
+    UILayer -->|Yes, disabled in the UI| Trust["⚠️ Treated as 'handled' —<br/>but a disabled UI control is NOT a real security boundary"]
+    Trust --> APILayer{"API Layer:<br/>does the save endpoint independently check<br/>WHICH fields this role may write?<br/>(the actual BOPLA/Mass-Assignment check)"}
+    APILayer -->|"Yes — field-level authorization enforced"| Blocked["✅ dateOfBirth change REJECTED;<br/>nickName change ACCEPTED"]
+    APILayer -->|"No — endpoint accepts and persists<br/>the whole submitted object<br/>(Defect #1's actual root cause)"| Leak["❌ dateOfBirth silently updated —<br/>a payroll/compliance system-of-record field<br/>changed by the employee themselves"]
+
+    classDef risk fill:#e65100,stroke:#fb8c00,color:#fff
+    classDef good fill:#1b5e20,stroke:#43a047,color:#fff
+    classDef bad fill:#b71c1c,stroke:#e53935,color:#fff
+    class Trust risk
+    class Blocked good
+    class Leak bad
+```
+
+Disabling a field in a browser only stops a well-behaved browser session from *rendering* an
+editable input — it does nothing against a request sent directly to the API, whether through a
+modified request, a replay, or a client bug that simply forgot to strip the field. The fix —
+enforcing the field-access-control list at the form-rendering layer *and* at the save/API layer as
+defense-in-depth — is this diagram's right-hand branch: the UI layer is a UX convenience, the API
+layer is the actual control, and a system that only has the first is one missing authorization
+check away from the exact defect that shipped here.
+
+## 4. File Upload Validation — the Real Mechanism Behind Defect #2
+
+```mermaid
+flowchart TD
+    Upload["📎 Employee uploads a profile picture: 1.4 MB .jpg"] --> ClientCheck{"Client-side check:<br/>is the file extension in [jpg, png, gif]?"}
+    ClientCheck -->|No| RejectFormat["🚫 Rejected — format error shown immediately"]
+    ClientCheck -->|Yes| ServerCheck{"Server-side check:<br/>is the file SIZE also independently validated here,<br/>not just the extension?"}
+    ServerCheck -->|"Yes — size checked server-side"| RejectSize["✅ Rejected — 'file exceeds 1MB' error (correct behavior)"]
+    ServerCheck -->|"No — only the extension was ever checked<br/>(Defect #2's actual root cause)"| Accept["❌ File accepted despite exceeding<br/>the stated 1MB limit"]
+
+    classDef good fill:#1b5e20,stroke:#43a047,color:#fff
+    classDef bad fill:#b71c1c,stroke:#e53935,color:#fff
+    class RejectFormat,RejectSize good
+    class Accept bad
+```
+
+This is the same *shape* of bug as Defect #1, even though it's a completely different feature:
+both are a constraint enforced at exactly one layer, and that layer happened to be the wrong one
+to rely on alone. The fix in both cases is structurally identical: validate server-side, and treat
+client-side validation as UX, not security or correctness.
+
+---
+
+**Source for the real-world standard referenced above:** OWASP API3:2023 — Broken Object Property
+Level Authorization.
+</script>
+
+<script type="text/markdown" id="src-business">
+# HRMS Platform — Business Overview
+
+> **Start here if you're new to QA, in HR, or coming from a non-QA technical role.** This document
+> covers the HRMS/ESS module and its field-access model before you look at a single test case.
+
+## 1. What problem does it solve?
+
+Companies need a system where employees can view and manage some of their own information — a
+nickname, marital status, contact preferences — without needing HR to make every small update,
+while other, more sensitive or system-of-record fields (Employee ID, Date of Birth) stay
+HR-controlled. The ESS/MyInfo module is that self-service layer.
+
+## 2. Core Modules and Their Submodules
+
+| Module | Submodules / Key Components | Responsible For | Primarily Tested Via |
+|---|---|---|---|
+| **Login / Authentication** | Credential Validation · Negative-Case Error Messaging | ESS user credential validation | UI Automation + Functional Testing |
+| **Personal / Contact Details (MyInfo)** | Field Rendering · Save/Persistence · Field-Level Write Authorization | The employee's own editable and view-only profile fields | GUI Testing + API Testing |
+| **File Upload (Profile Picture)** | Format Validation · Size Validation | Accepting a profile picture only within accepted formats and the size limit | Functional Testing |
+
+"Field-Level Write Authorization" gets called out as its own submodule rather than folded into
+"Save/Persistence" because a save endpoint can correctly persist data — the save genuinely works —
+while still authorizing the *wrong set of fields* to be written. Those are two different
+correctness properties.
+
+## 3. The Field-Access-Control Model
+
+| Field | Access |
+|---|---|
+| Full Name, Middle Name, Last Name | Employee-editable (text) |
+| Employee ID | HR-controlled (disabled to employee) |
+| Other ID | Employee-editable (text) |
+| Driver's License Number | HR-controlled (disabled to employee) |
+| License Expiry Date | Employee-editable (date picker) |
+| Gender | Employee-editable (radio button) |
+| Nationality | Employee-editable (combo box) |
+| Marital Status | Employee-editable (combo box) |
+| Date of Birth | HR-controlled (disabled to employee) |
+| Nick Name | Employee-editable (text) |
+| Smoker | Employee-editable |
+| Military Service | Employee-editable (text) |
+
+A field that's supposed to be HR-only but accidentally left editable is a data-integrity risk. A
+field that's supposed to be employee-editable but stuck disabled is a usability regression that
+generates HR support tickets. Both directions need explicit test coverage.
+
+## 4. GUI Control Types on This Form
+
+| Control Type | Fields | Correct Behavior |
+|---|---|---|
+| Text Box | Full Name, Middle Name, Last Name, Other ID, Nick Name, Military Service | Accepts free text input |
+| Combo Box | Marital Status, Nationality | Displays a list of items; allows exactly one selection at a time |
+| Radio Button | Gender | Allows exactly one option selected at a time |
+| Date Picker | License Expiry Date | Selected date populates the associated text field exactly |
+| File Upload | Profile Picture | Accepts jpg/png/gif; enforces a size limit (e.g. under 1 MB) |
+
+## 5. Glossary
+
+| Term | Meaning |
+|---|---|
+| **ESS** | Employee Self-Service — the employee-facing portal |
+| **MyInfo** | Common name for the ESS personal-details module |
+| **PIM** | Personnel Information Management — the underlying employee data model |
+| **Disabled field** | A form field the current user cannot edit, typically HR/Admin-managed |
+| **BOPLA** | OWASP API3:2023's name for an API that authorizes access to an *object* but not to specific *properties* on it |
+| **PF / ESI / TDS** | Provident Fund / Employee State Insurance / Tax Deducted at Source |
+
+## 6. Stakeholders / Involved Parties
+
+| Stakeholder | Role in this module |
+|---|---|
+| **Employee (ESS user)** | Logs in, views and updates their own permitted personal/contact details |
+| **HR Admin** | Creates ESS user accounts, manages HR-controlled fields employees cannot self-edit |
+| **Payroll Team** | Consumes system-of-record fields for payroll and compliance processing |
+| **IT/Platform Admin** | Manages ESS access provisioning and system configuration |
+| **QA Team** | Maintains field-by-field GUI validation coverage |
+
+## 7. Dependencies
+
+- **PIM (Personnel Information Management)** — the underlying employee data store ESS reads from
+  and writes to
+- **Authentication Service** — ESS login credential validation
+- **File Storage Service** — profile picture uploads, with format/size validation
+
+Because HR-controlled fields feed directly into payroll and compliance processing, an
+access-control defect here isn't just a UI bug — it's a data-integrity risk with downstream
+payroll/compliance impact.
+</script>
+
+<script type="text/markdown" id="src-tech">
+# HRMS Platform — Tech Stack & Skills Demonstrated
+
+## 1. Full Tech Stack, and Why Each Tool
+
+| Category | Tool | Why This Tool Specifically |
+|---|---|---|
+| **Manual Testing** | Functional, GUI, Database/Data-validation testing | Field-by-field GUI correctness and access-control testing benefit from a human verifying actual rendered state |
+| **API Testing** | Postman, SQL (direct database validation) | Confirms what was *actually written to PIM*, independent of what the UI reports |
+| **UI Automation** | Selenium WebDriver + Java + TestNG | Targets the highest-value, most repetitive cases as a complement to the manual suite |
+| **Build Tool** | Maven | Standard JVM build/dependency management |
+| **Performance Testing** | JMeter | Stays in the same JVM ecosystem as Selenium/TestNG/Maven |
+| **Bug Tracking** | JIRA | Full defect lifecycle tracking |
+| **Version Control** | Git, GitHub | This repo itself |
+
+## 2. Skills Demonstrated
+
+| Skill | Demonstrated By |
+|---|---|
+| **Manual / Functional Testing** | The full login + field-by-field Personal Details test suite |
+| **API Testing** | SQL-backed validation confirming PIM's actual stored value |
+| **UI Automation** | A Selenium + TestNG spec covering login and field-state verification |
+| **Security-Adjacent Testing** | A dedicated defense-in-depth category tracing to OWASP BOPLA |
+| **Requirement Traceability (RTM)** | A worked requirement → test case → status mapping |
+
+## 3. The Testing Pyramid Applied to This Project
+
+```mermaid
+flowchart TD
+    UNIT["Unit Tests<br/>(owned by the application dev team — out of this QA scope)"]
+    DATA["Data-Level Tests<br/>SQL — confirming PIM's actual stored value"]
+    API["API Tests<br/>field-level write authorization, login contract"]
+    UI["UI / GUI Tests<br/>Selenium — login, field state, control-type behavior"]
+    PERF["Performance Tests<br/>JMeter — concurrent login/access storms"]
+    UNIT --> DATA --> API --> UI --> PERF
+
+    classDef layer fill:#263238,stroke:#607d8b,color:#fff
+    class UNIT,DATA,API,UI,PERF layer
+```
+
+Data-Level sits just above Unit here for a specific reason: a UI assertion that a field "looks
+disabled" can't tell you whether a direct API call bypassing that UI would still be rejected.
+
+## 4. CI/CD — Suggested Pipeline Shape
+
+```mermaid
+flowchart LR
+    PR["Pull Request / Merge"] --> Build["Maven build"]
+    Build --> API["API + SQL data-level suite"]
+    API --> UI["Selenium/TestNG regression suite"]
+    UI --> Gate{"All required checks pass?"}
+    Gate -->|Yes| Merge["Merge allowed"]
+    Gate -->|No| Block["Build failed — surfaced in CI"]
+    Merge --> Nightly["Nightly: JMeter login/access-storm run"]
+```
+
+## 5. Performance Testing, In Depth
+
+HRMS/ESS has a performance profile that looks almost nothing like a typical transactional
+platform: every employee in the company uses it, but each one just views or edits their own
+profile occasionally. That's high **concurrency of low-value requests**, not high **throughput of
+transactional volume**.
+
+| Test Type | What It Targets |
+|---|---|
+| **Login storm / concurrent-session load test** | Many employees logging in within the same narrow window |
+| **Mass-update spike test** | A company-wide policy change prompting many employees to edit and save Personal Details |
+| **File-upload soak test** | Sustained profile-picture upload traffic over a longer window |
+</script>
+
+<script type="text/markdown" id="src-ui">
+# HRMS Platform — UI Consistency
+
+> Field state (enabled/disabled), control-type behavior, and validation messaging surface across
+> the ESS Personal/Contact Details form. This document covers whether it's represented
+> **consistently** across the form and its supporting confirmation/error states.
+
+## Why This Matters More Here Than in Most Modules
+
+This module's central risk is a field-access-control mismatch — a field that's supposed to be
+HR-only editable by an employee, or vice versa. Since every employee in the company fills out this
+same form, even a small, inconsistent enabled/disabled treatment scales instantly into a
+company-wide data-integrity or support-load problem.
+
+## 1. Field State Representation Consistency
+
+| State | Expected Visual Treatment |
+|---|---|
+| Employee-editable field | Normal input styling, fully interactive |
+| HR-controlled (disabled) field | Visually distinct disabled/greyed styling — never identical in appearance to an editable field |
+| Field with a validation error | Clear inline error styling, consistent across all control types |
+
+## 2. Save Confirmation & Error Messaging Consistency
+
+- The "details are saved" confirmation message has to appear identically worded regardless of
+  which field(s) were changed
+- Login error messages have to be worded identically across all three negative-case combinations —
+  never a different message that inadvertently reveals which part was wrong
+
+## 3. File Upload Validation Messaging Consistency
+
+- The format-rejection message and the size-rejection message need to be distinct and specific — a
+  generic "upload failed" message for both leaves an employee with no way to self-correct
+
+## 4. Terminology Consistency
+
+- "ESS" vs. "MyInfo" vs. "Personal Details," used interchangeably for the same module — pick one
+  primary term
+- "Disabled" vs. "Read-only" vs. "Locked" as different labels for the same HR-controlled-field
+  concept
+
+## 5. Cross-Browser & Responsive Consistency
+
+- Do combo boxes, radio buttons, and the date picker render and behave identically across Chrome,
+  Firefox, and Safari/WebKit?
+
+## 6. Accessibility Consistency
+
+- Are enabled/disabled field states distinguishable by more than color/opacity alone — also
+  conveyed via `aria-disabled` and cursor state, for example?
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+<script>
+(function () {
+  var renderer = new marked.Renderer();
+  var originalCode = renderer.code.bind(renderer);
+  renderer.code = function (code, infostring, escaped) {
+    if ((infostring || '').trim() === 'mermaid') {
+      return '<pre class="mermaid">' + code + '</pre>';
+    }
+    return originalCode(code, infostring, escaped);
+  };
+  marked.setOptions({ renderer: renderer, gfm: true, breaks: false });
+
+  var docs = {
+    readme: 'src-readme',
+    architecture: 'src-architecture',
+    business: 'src-business',
+    tech: 'src-tech',
+    ui: 'src-ui'
+  };
+
+  var target = document.getElementById('doc');
+  var navItems = document.querySelectorAll('.nav-item');
+
+  function render(key) {
+    var el = document.getElementById(docs[key]);
+    if (!el) return;
+    var raw = el.textContent;
+    target.innerHTML = marked.parse(raw);
+    navItems.forEach(function (btn) {
+      btn.classList.toggle('active', btn.getAttribute('data-doc') === key);
+    });
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  navItems.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      render(btn.getAttribute('data-doc'));
+    });
+  });
+
+  render('readme');
+})();
+</script>

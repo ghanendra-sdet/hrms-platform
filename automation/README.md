@@ -14,8 +14,8 @@ TestNG**.
 ## Why Selenium + Java + TestNG
 
 - This module's regression suite is primarily manual (see the README's "My Role" and Key
-  Achievements) — Selenium/TestNG automation here targets the highest-value, most repetitive
-  cases (login negative-case matrix, field-state verification) to reduce manual regression load,
+  Achievements) — Selenium/TestNG automation here targets the highest-value, most repetitive cases
+  (the login negative-case matrix, field-state verification) to reduce manual regression load,
   rather than attempting full automation coverage of every GUI behavior test
 - TestNG's `@DataProvider` is a natural fit for the login negative-case matrix (valid/invalid
   username × valid/invalid password)
@@ -39,13 +39,15 @@ automation/
     └── login-access-storm-load.jmx   ← concurrent login/access-storm load testing
 ```
 
-> This repo currently includes one representative sample (`SampleEssLoginTest.java`) rather than
-> the full framework, to keep the portfolio focused.
+> This repo currently includes one representative sample — `SampleEssLoginTest.java` plus the two
+> page objects it drives (`LoginPage.java`, `PersonalDetailsPage.java`), sitting flat at the root
+> of this folder rather than in the full `src/test/java/...` layout above — kept this way to stay
+> focused as a portfolio piece.
 
 ## Test Data Policy
 
-All automation uses **dummy data only**: dummy ESS usernames/passwords that map to no real
-employee account.
+All automation uses dummy data only: dummy ESS usernames/passwords that map to no real employee
+account.
 
 ## Priority Automated Scenarios
 
